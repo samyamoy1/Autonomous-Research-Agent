@@ -1,0 +1,25 @@
+
+# Environment and configuration
+python-dotenv
+
+# LLM providers
+google-genai
+groq
+ollama
+
+# Web search and scraping
+tavily-python
+requests
+beautifulsoup4
+
+# LangGraph and text processing
+langgraph
+langchain-text-splitters
+
+# Embeddings and vector database
+sentence-transformers
+faiss-cpu
+numpy
+
+# Testing
+pytest
