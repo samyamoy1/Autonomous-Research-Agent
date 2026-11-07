@@ -1,72 +1,52 @@
 # Autonomous Research Agent
 
-An AI-powered research assistant that autonomously searches the web, collects information, evaluates research quality, and generates structured research reports.
-
-Built with **Python, LangGraph, RAG, Groq, Tavily, and FAISS**.
+An AI-powered research assistant that automates web research, evaluates collected information, and generates structured research reports using LLMs and LangGraph.
 
 ## Overview
 
-The Autonomous Research Agent is a terminal-based AI system designed to automate the research process.
+This project implements an autonomous research workflow where an AI agent searches the web, extracts relevant information, and evaluates the quality of its findings.
 
-Instead of simply generating an answer from an LLM, the agent follows an iterative research workflow:
-
-1. Takes a research topic from the user.
-2. Searches the web for relevant information.
-3. Scrapes and collects content from web pages.
-4. Evaluates the collected research using an AI Critic.
-5. Identifies missing information and generates additional search queries.
-6. Repeats the research process until the quality is sufficient or the maximum number of rounds is reached.
-7. Generates a structured final research report.
+An AI Critic identifies missing information and provides feedback, allowing the researcher to perform additional research before generating the final report.
 
 ## Architecture
 
 ```mermaid
 flowchart TD
-    A[User Research Topic] --> B[Researcher Agent]
-    B --> C[Web Search - Tavily]
-    C --> D[Web Scraping]
-    D --> E[Text Processing]
-    E --> F[AI Critic]
-    F --> G{Research Sufficient?}
-    G -->|No| H[Generate Additional Queries]
-    H --> B
-    G -->|Yes| I[Final Report Generator]
-    G -->|Max Rounds Reached| I
-    I --> J[Research Report]
+    A[Research Topic] --> B[Researcher]
+    B --> C[Web Search and Scraping]
+    C --> D[Information Processing]
+    D --> E[AI Critic]
+    E --> F{Research Sufficient?}
+    F -->|No| B
+    F -->|Yes| G[Final Report]
+    F -->|Maximum Rounds Reached| G
 ```
 
 ## Key Features
 
-- **Autonomous Web Research:** Searches the web and collects relevant information.
-- **Web Scraping:** Extracts readable content from web pages.
-- **Text Chunking:** Splits collected documents into smaller chunks.
-- **Semantic Search:** Uses Sentence Transformers to generate embeddings.
-- **Vector Database:** Stores and retrieves research chunks using FAISS.
-- **Retrieval-Augmented Generation (RAG):** Retrieves relevant context for question answering.
-- **AI Critic:** Evaluates research quality and identifies missing information.
-- **Iterative Research:** Uses critic feedback to guide additional research rounds.
-- **LangGraph Workflow:** Manages nodes, conditional routing, and research loops.
-- **Report Generation:** Produces structured research reports with source URLs.
+- Automated web search and content extraction.
+- Document chunking and semantic embeddings.
+- FAISS-based vector storage and retrieval.
+- Retrieval-Augmented Generation (RAG).
+- AI-powered research evaluation and feedback.
+- Iterative research using LangGraph workflows.
+- Structured report generation with source references.
 
 ## Tech Stack
 
-| Technology | Purpose |
-|---|---|
-| Python | Core programming language |
-| LangGraph | Agent workflow orchestration |
-| Groq | LLM inference |
-| Ollama | Local LLM support |
-| Tavily | Web search |
-| BeautifulSoup | Web scraping |
-| Sentence Transformers | Text embeddings |
-| FAISS | Vector similarity search |
-| LangChain Text Splitters | Document chunking |
+- **Language:** Python
+- **LLM Providers:** Groq, Ollama, Gemini
+- **Agent Framework:** LangGraph
+- **Web Search:** Tavily
+- **Web Scraping:** BeautifulSoup, Requests
+- **Embeddings:** Sentence Transformers
+- **Vector Database:** FAISS
+- **Text Processing:** LangChain Text Splitters
 
 ## Project Structure
 
 ```text
 Autonomous-Research-Agent/
-│
 ├── src/
 │   └── research_agent/
 │       ├── agent_graph.py
@@ -80,60 +60,42 @@ Autonomous-Research-Agent/
 │       ├── storage.py
 │       ├── rag.py
 │       ├── llm.py
-│       ├── prompts.py
-│       ├── config.py
 │       └── run_agent.py
-│
 ├── data/
-│   └── vector_store/
-│
+├── tests/
 ├── reports/
 ├── logs/
-├── tests/
-│
-├── .env.example
-├── .gitignore
 ├── requirements.txt
 ├── pyproject.toml
 └── README.md
 ```
 
-## Installation and Setup
+## Installation
 
-### 1. Clone the repository
+**1. Clone the repository**
 
 ```bash
 git clone https://github.com/samyamoy1/Autonomous-Research-Agent.git
 cd Autonomous-Research-Agent
 ```
 
-### 2. Create a virtual environment
+**2. Create and activate a virtual environment**
 
 ```bash
 python -m venv venv
-```
-
-Activate it on Windows PowerShell:
-
-```powershell
 .\venv\Scripts\Activate.ps1
 ```
 
-### 3. Install dependencies
+**3. Install dependencies**
 
 ```bash
 python -m pip install -r requirements.txt
-```
-
-### 4. Install the project
-
-```bash
 python -m pip install -e .
 ```
 
-### 5. Configure environment variables
+**4. Configure environment variables**
 
-Create a `.env` file in the project root using `.env.example` as a template.
+Create a `.env` file using `.env.example` and provide the required API keys.
 
 ```env
 GROQ_API_KEY=your_groq_api_key
@@ -141,74 +103,38 @@ TAVILY_API_KEY=your_tavily_api_key
 LLM_PROVIDER=groq
 ```
 
-You need API keys for your chosen Groq LLM provider and Tavily search service. Check their current free-tier limits.
-
-### 6. Run the agent
+**5. Run the agent**
 
 ```bash
 python -m research_agent.run_agent
 ```
 
-Enter your research topic when prompted.
+Enter a research topic when prompted.
 
-## Example
+## Technologies and Concepts
 
-**Input:**
-
-```text
-Why do LLMs hallucinate and what are the ways to reduce it?
-```
-
-The agent searches for relevant information, evaluates its findings, performs additional research when needed, and generates a final research report.
-
-## LLM Configuration
-
-The project supports multiple LLM providers:
-
-- **Groq:** Cloud-based inference.
-- **Ollama:** Local inference using models such as Qwen 2.5 1.5B.
-- **Gemini:** Alternative cloud LLM provider.
-
-Configure the provider using the `LLM_PROVIDER` variable in your `.env` file.
-
-Provider availability, model access, and free-tier limits may vary.
-
-## Learning Objectives
-
-This project was developed to gain practical experience with:
+This project explores practical implementations of:
 
 - Large Language Models (LLMs)
 - Retrieval-Augmented Generation (RAG)
-- Semantic Search and Embeddings
-- Vector Databases
+- Semantic Search and Vector Databases
 - AI Agents and Agentic Workflows
 - LangGraph State Management
-- Conditional Edges and Cyclic Graphs
+- Conditional Routing and Cyclic Graphs
 - AI-based Critique and Evaluation
-- Autonomous Research Pipelines
 
 ## Limitations
 
-- Web scraping depends on website accessibility and may fail on pages that block automated requests.
-- Research quality depends on the relevance and reliability of retrieved sources.
-- LLM outputs may still contain inaccurate information.
-- API providers impose usage and rate limits.
-- The AI Critic may not always accurately judge research completeness.
-
-**Generated reports should be independently verified before being used as authoritative research.**
-
-## Future Scope
-
-Potential improvements include better source-quality ranking, more robust evaluation, and improved citation verification.
+- Research quality depends on the relevance and reliability of collected sources.
+- Some websites may block automated scraping.
+- LLM-generated content may contain inaccuracies and should be independently verified.
+- API usage is subject to provider rate limits.
 
 ## Author
 
 **Samyamoy Das**
 
-B.Tech — Computer Science and Engineering (Artificial Intelligence)
+B.Tech — Computer Science and Engineering (AI)
 
-GitHub: [@samyamoy1](https://github.com/samyamoy1)
+[GitHub Profile](https://github.com/samyamoy1)
 
----
-
-If you find this project interesting, consider giving it a ⭐ on GitHub!
